@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #060709;
+  --surface: rgba(255,255,255,0.035);
+  --surface2: rgba(255,255,255,0.02);
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.04);
+  --txt: rgba(255,255,255,0.90);
+  --sub: rgba(255,255,255,0.60);
+  --dim: rgba(255,255,255,0.35);
+  --muted: rgba(255,255,255,0.15);
+  --accent: #D4FF00;
+  --accent-lo: rgba(212,255,0,0.07);
+  --accent-md: rgba(212,255,0,0.25);
+  --green: #4af626;
+  --amber: #ffb700;
+  --amber-lo: rgba(255,183,0,0.07);
+  --r: 8px;
+  --r2: 6px;
+  --font-ui: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain animation */
+@keyframes grain {
+  0% { transform: translate(0); }
+  33% { transform: translate(-1%, 2%); }
+  66% { transform: translate(2%, -1%); }
+  100% { transform: translate(0); }
+}
+
+/* Glitch */
+@keyframes glitch {
+  0%, 94%, 100% { text-shadow: none; }
+  95% { text-shadow: -3px 0 var(--accent), 3px 0 rgba(255,255,255,0.3); transform: translate(1px, 0); }
+  96% { text-shadow: 2px 0 rgba(255,255,255,0.3), -2px 0 var(--accent); transform: translate(-1px, 0); }
+  97% { text-shadow: none; transform: none; }
+}
+
+/* Pulse */
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+/* Cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
