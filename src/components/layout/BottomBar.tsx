@@ -9,14 +9,14 @@ interface BottomBarProps {
 
 export default function BottomBar({ onNext, onPrev, onPause, paused }: BottomBarProps) {
   return (
-    <div className="flex items-center justify-between gap-2 px-4 py-2 shrink-0">
+    <div className="flex items-center justify-between gap-6 px-6 py-4 shrink-0">
       {/* Left */}
       <div className="flex items-center gap-2">
         <NavBtn onClick={onPrev}>←</NavBtn>
       </div>
 
       {/* Center */}
-      <div className="flex-1 flex justify-center gap-2">
+      <div className="flex-1 flex justify-center gap-6">
         <button
           onClick={onNext}
           className="
@@ -28,7 +28,7 @@ export default function BottomBar({ onNext, onPrev, onPause, paused }: BottomBar
             active:scale-[0.98]
           "
         >
-          <span className="px-2.5 py-0.5 rounded border border-white/15 text-xs text-white/60">espace</span>
+          <span className="px-3 py-1 rounded border border-white/15 text-xs text-white/60">espace</span>
           section suivante
         </button>
         <button
@@ -43,7 +43,7 @@ export default function BottomBar({ onNext, onPrev, onPause, paused }: BottomBar
           "
         >
           {paused ? <Play size={16} /> : <Pause size={16} />}
-          <span className="px-2.5 py-0.5 rounded border border-white/15 text-xs text-white/60 font-semibold">enter</span>
+          <span className="px-3 py-1 rounded border border-white/15 text-xs text-white/60 font-semibold">enter</span>
         </button>
       </div>
 

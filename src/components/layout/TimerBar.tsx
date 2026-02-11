@@ -19,7 +19,7 @@ export default function TimerBar({ formatted, pct, paused, sectionStatus, onTogg
   const { color, shadow } = getTimerColor(pct);
 
   return (
-    <div className="flex items-center gap-2.5 px-4 mb-1.5 shrink-0">
+    <div className="flex items-center gap-4 px-6 mb-3 shrink-0">
       <span className="font-mono text-xs tracking-widest uppercase text-white/35">Timer</span>
 
       {/* Track */}
@@ -42,7 +42,7 @@ export default function TimerBar({ formatted, pct, paused, sectionStatus, onTogg
 
       {/* Timer box */}
       <div
-        className="font-mono text-[28px] font-extrabold tracking-wider text-center px-4 py-2 rounded-md border border-[var(--border)] bg-[var(--surface)] whitespace-nowrap transition-colors duration-500"
+        className="h-8 font-mono text-sm font-bold tracking-wider flex items-center justify-center px-3 rounded-md border border-[var(--border)] bg-[var(--surface)] whitespace-nowrap transition-colors duration-500"
         style={{ color }}
       >
         {formatted}
@@ -68,7 +68,7 @@ export default function TimerBar({ formatted, pct, paused, sectionStatus, onTogg
 
       {/* Section status box */}
       <div
-        className="font-mono text-[28px] font-extrabold tracking-wider text-center px-4 py-2 rounded-md border border-[var(--border)] bg-[var(--surface)] whitespace-nowrap transition-colors duration-300"
+        className="h-8 font-mono text-sm font-bold tracking-wider flex items-center justify-center px-3 rounded-md border border-[var(--border)] bg-[var(--surface)] whitespace-nowrap transition-colors duration-300"
         style={{ color: sectionStatus.color }}
       >
         {sectionStatus.text}

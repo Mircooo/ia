@@ -66,3 +66,9 @@ html, body, #root {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Prompt typing classes (used by DOM manipulation in BootScreen) */
+.prompt-area .em { color: var(--txt); font-weight: 600; }
+.prompt-area .ac { color: var(--accent); }
+.prompt-area .dm { color: var(--dim); }
+.prompt-area br { display: block; content: ''; margin: 0; line-height: 0.4; }

@@ -73,7 +73,7 @@ export default function App() {
         />
 
         {/* Main: Nav + Stage */}
-        <div className="flex-1 grid grid-cols-[220px_1fr] gap-2 px-4 min-h-0">
+        <div className="flex-1 grid grid-cols-[220px_1fr] gap-6 px-6 min-h-0">
           <NavPanel
             sections={SECTIONS}
             current={current}

@@ -4,7 +4,10 @@
       "Bash(dir:*)",
       "Bash(gh api:*)",
       "Bash(git init:*)",
-      "Bash(git remote add:*)"
+      "Bash(git remote add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ninit: conf-ia presentation project\n\nReact 19 + TypeScript + Vite 7 + Tailwind 3\nIncludes CLAUDE.md guardrails for safe development\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(pnpm build:*)"
     ]
   }
 }
