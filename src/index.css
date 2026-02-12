@@ -71,4 +71,4 @@ html, body, #root {
 .prompt-area .em { color: var(--txt); font-weight: 600; }
 .prompt-area .ac { color: var(--accent); }
 .prompt-area .dm { color: var(--dim); }
-.prompt-area br { display: block; content: ''; margin: 0; line-height: 0.4; }
+.prompt-area br { display: block; content: ''; margin: 0; line-height: 0.15; }

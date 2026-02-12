@@ -70,31 +70,35 @@ const PROMPT: Segment[] = [
 ];
 
 const BASE_SPEED = 75;
-const BSOD_TECH = [
+const BSOD_LINES = [
+  'Collecting data for crash dump...',
+  'Initializing disk for crash dump...',
+  'Stop code: SYSTEM_THREAD_EXCEPTION_NOT_HANDLED',
   'What failed: ntoskrnl.exe',
-  'Bug check: 0x0000007E (0xC0000005, 0xFC5ACBF3, 0xFC90F8C0, 0xFC90F5C0)',
-  'Dump file: C:\\Windows\\MEMORY.DMP',
 ];
 
 /* ═══ TYPING HOOK (char-by-char with auto-scroll) ═══ */
 function useTyping(
   areaRef: React.RefObject<HTMLDivElement | null>,
   cursorRef: React.RefObject<HTMLSpanElement | null>,
+  scrollRef: React.RefObject<HTMLDivElement | null>,
 ) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
     const el = areaRef.current;
     const cursor = cursorRef.current;
-    if (!el || !cursor) return;
+    const scrollEl = scrollRef.current;
+    if (!el || !cursor || !scrollEl) return;
 
     let segIdx = 0;
     let charIdx = 0;
     let currentSpan: HTMLSpanElement | null = null;
     let timer: number;
+    let scrollOffset = 0;
 
     function step() {
-      if (!el || !cursor) return;
+      if (!el || !cursor || !scrollEl) return;
 
       if (segIdx >= PROMPT.length) {
         cursor.style.display = 'none';
@@ -124,9 +128,10 @@ function useTyping(
         charIdx++;
 
         const rect = cursor.getBoundingClientRect();
-        const center = window.innerHeight * 0.45;
-        if (rect.bottom > center) {
-          el.style.transform = `translateY(${-(rect.bottom - center)}px)`;
+        const anchor = window.innerHeight * 0.65;
+        if (rect.bottom > anchor) {
+          scrollOffset += rect.bottom - anchor;
+          scrollEl.style.transform = `translateY(${-scrollOffset}px)`;
         }
 
         const ch = seg.t[charIdx - 1] ?? '';
@@ -143,17 +148,18 @@ function useTyping(
 
     timer = window.setTimeout(step, 1500);
     return () => clearTimeout(timer);
-  }, [areaRef, cursorRef]);
+  }, [areaRef, cursorRef, scrollRef]);
 
   return done;
 }
 
 /* ═══ PHASE 1 — PROMPT ═══ */
-function PromptPhase({ onDone }: { onDone: () => void }) {
+function PromptPhase({ onDone, onSkip }: { onDone: () => void; onSkip: () => void }) {
   const areaRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [brandOn, setBrandOn] = useState(false);
-  const typingDone = useTyping(areaRef, cursorRef);
+  const typingDone = useTyping(areaRef, cursorRef, scrollRef);
 
   useEffect(() => { const t = setTimeout(() => setBrandOn(true), 300); return () => clearTimeout(t); }, []);
 
@@ -174,40 +180,47 @@ function PromptPhase({ onDone }: { onDone: () => void }) {
       </div>
 
       {/* Text area */}
-      <div className="flex-1 overflow-hidden flex flex-col justify-center items-center px-[8vw] pt-[60px] pb-[120px]">
+      <div className="flex-1 overflow-hidden flex flex-col justify-start items-center px-[8vw] pt-[60vh] pb-[120px]">
         <div
-          ref={areaRef}
-          className="prompt-area font-mono text-[clamp(30px,3.5vw,46px)] leading-[1.55] text-[var(--sub)] text-left max-w-[1000px] w-full"
+          ref={scrollRef}
+          className="max-w-[900px] w-full"
           style={{ transition: 'transform .4s cubic-bezier(.16,1,.3,1)' }}
         >
-          <span
-            ref={cursorRef}
-            className="inline-block w-3 bg-accent align-text-bottom ml-0.5"
-            style={{ height: '1.05em', animation: 'blink .7s step-end infinite' }}
-          />
+          <div
+            ref={areaRef}
+            className="prompt-area font-mono text-[clamp(20px,2.2vw,32px)] leading-[1.55] text-[var(--sub)] text-left"
+          >
+            <span
+              ref={cursorRef}
+              className="inline-block w-3 bg-accent align-text-bottom ml-0.5"
+              style={{ height: '1.05em', animation: 'blink .7s step-end infinite' }}
+            />
+          </div>
+          <button
+            onClick={onDone}
+            className={`
+              inline-flex items-center gap-2.5 mt-8 px-10 py-4 rounded-md
+              border border-[var(--accent-md)]
+              bg-gradient-to-b from-[rgba(212,255,0,0.06)] to-transparent
+              font-mono text-base font-bold tracking-[.1em] uppercase text-accent
+              cursor-pointer transition-all duration-300
+              hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.4)] hover:shadow-[0_8px_32px_rgba(212,255,0,0.06)]
+              active:scale-[0.97]
+              ${typingDone ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+            `}
+          >
+            osef de ma vie, commencer la présentation
+          </button>
         </div>
       </div>
 
-      {/* Button dock */}
-      <div
-        className={`fixed bottom-0 inset-x-0 z-20 flex justify-center px-[8vw] pt-5 pb-7 transition-opacity duration-500 ${typingDone ? '' : 'opacity-0 pointer-events-none'}`}
-        style={{ background: 'linear-gradient(0deg, var(--bg) 60%, transparent)' }}
+      {/* Skip → BSOD */}
+      <button
+        onClick={onSkip}
+        className="fixed bottom-5 right-6 z-20 font-mono text-xs text-white/20 cursor-pointer transition-colors duration-150 hover:text-white/50"
       >
-        <button
-          onClick={onDone}
-          className="
-            inline-flex items-center gap-2.5 px-10 py-4 rounded-md
-            border border-[var(--accent-md)]
-            bg-gradient-to-b from-[rgba(212,255,0,0.06)] to-transparent
-            font-mono text-base font-bold tracking-[.1em] uppercase text-accent
-            cursor-pointer transition-all duration-150
-            hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.4)] hover:shadow-[0_8px_32px_rgba(212,255,0,0.06)]
-            active:scale-[0.97]
-          "
-        >
-          osef de ma vie, commencer la présentation
-        </button>
-      </div>
+        skip
+      </button>
     </div>
   );
 }
@@ -215,71 +228,73 @@ function PromptPhase({ onDone }: { onDone: () => void }) {
 /* ═══ PHASE 2 — BSOD ═══ */
 function BSODPhase({ active, onDone }: { active: boolean; onDone: () => void }) {
   const [pct, setPct] = useState(0);
-  const [tech, setTech] = useState<string[]>([]);
+  const [line, setLine] = useState<string | null>(null);
   const [showBtn, setShowBtn] = useState(false);
+  const pctRef = useRef(0);
 
   useEffect(() => {
     if (!active) return;
     let timer: number;
+    let techStarted = false;
 
     const countUp = () => {
-      setPct(prev => {
-        const next = Math.min(100, prev + Math.random() * 3 + 0.5);
-        if (next < 100) {
-          timer = window.setTimeout(countUp, 150 + Math.random() * 250);
-        } else {
-          let li = 0;
-          const showLine = () => {
-            if (li < BSOD_TECH.length) {
-              setTech(p => [...p, BSOD_TECH[li]!]);
-              li++;
-              timer = window.setTimeout(showLine, 400);
-            } else {
-              timer = window.setTimeout(() => setShowBtn(true), 1000);
-            }
-          };
-          timer = window.setTimeout(showLine, 600);
-        }
-        return next;
-      });
+      const next = Math.min(100, pctRef.current + Math.random() * 5 + 2);
+      pctRef.current = next;
+      setPct(next);
+
+      if (next < 100) {
+        timer = window.setTimeout(countUp, 80 + Math.random() * 150);
+      } else if (!techStarted) {
+        techStarted = true;
+        let li = 0;
+        const showLine = () => {
+          if (li < BSOD_LINES.length) {
+            setLine(BSOD_LINES[li]!);
+            li++;
+            timer = window.setTimeout(showLine, 1800);
+          } else {
+            setLine(null);
+            timer = window.setTimeout(() => setShowBtn(true), 1500);
+          }
+        };
+        timer = window.setTimeout(showLine, 1200);
+      }
     };
 
-    timer = window.setTimeout(countUp, 800);
+    timer = window.setTimeout(countUp, 1200);
     return () => clearTimeout(timer);
   }, [active]);
 
   return (
     <div
-      className="fixed inset-0 flex flex-col justify-center px-[8vw] py-[6vh] cursor-default"
+      className="fixed inset-0 flex flex-col justify-center px-[8vw] py-[6vh] cursor-default overflow-hidden"
       style={{ background: '#0078d7', fontFamily: "'Segoe UI','Helvetica Neue',Arial,sans-serif" }}
     >
-      <div className="text-white text-[clamp(100px,14vw,160px)] font-thin mb-5 leading-none">:(</div>
-      <div className="text-white text-[clamp(20px,2.5vw,32px)] mb-2.5 leading-[1.4]">
-        Your device ran into a problem and needs to restart.
+      <div className="text-white text-[clamp(80px,10vw,120px)] font-thin mb-4 leading-none">:(</div>
+      <div className="text-white text-[clamp(16px,2vw,22px)] leading-[1.5] mb-6 max-w-[700px]">
+        Your PC ran into a problem and needs to restart.<br />
+        We&apos;re just collecting some error info, and then we&apos;ll restart for you.
       </div>
-      <div className="text-white text-[clamp(20px,2.5vw,32px)] mb-8">{Math.floor(pct)}% complete</div>
-      <div className="text-white/85 text-[clamp(14px,1.5vw,18px)] leading-[1.6] mb-3">
-        For more information about this issue and possible fixes, visit https://www.windows.com/stopcode<br />
-        If you call a support person, give them this info:
+      <div className="text-white text-[clamp(16px,2vw,22px)] mb-8">{Math.floor(pct)}% complete</div>
+      <div className="h-6">
+        {line && (
+          <div className="text-white/50 font-mono text-[clamp(11px,1vw,14px)] transition-opacity duration-300">
+            {line}
+          </div>
+        )}
       </div>
-      <div className="text-white/85 text-[clamp(14px,1.5vw,18px)] leading-[1.6] mb-3">
-        Stop code: SYSTEM_THREAD_EXCEPTION_NOT_HANDLED
-      </div>
-      <pre className="text-white/50 text-[clamp(12px,1.2vw,15px)] font-mono leading-[1.6] mb-6 whitespace-pre-line">
-        {tech.join('\n')}
-      </pre>
       {showBtn && (
         <button
           onClick={onDone}
           className="
-            inline-flex items-center gap-2 w-fit px-7 py-3 rounded-[3px]
+            inline-flex items-center gap-2 w-fit mt-6 px-7 py-3 rounded-[3px]
             border-[1.5px] border-white/50 bg-transparent text-white
             text-[clamp(14px,1.5vw,18px)] font-semibold cursor-pointer
             transition-all duration-[120ms]
             hover:bg-white/10 hover:border-white active:scale-[0.97]
           "
         >
-          Shut down
+          Restart
         </button>
       )}
     </div>
@@ -288,14 +303,16 @@ function BSODPhase({ active, onDone }: { active: boolean; onDone: () => void }) 
 
 /* ═══ PHASE 3 — JOKE ═══ */
 function JokePhase({ active, onDone }: { active: boolean; onDone: () => void }) {
-  const [vis, setVis] = useState<[boolean, boolean, boolean]>([false, false, false]);
+  const [vis, setVis] = useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
 
   useEffect(() => {
     if (!active) return;
-    const t1 = setTimeout(() => setVis(v => [true, v[1], v[2]]), 3000);
-    const t2 = setTimeout(() => setVis(v => [v[0], true, v[2]]), 5500);
-    const t3 = setTimeout(() => setVis(v => [v[0], v[1], true]), 8000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t1 = setTimeout(() => setVis(v => [true, v[1], v[2], v[3], v[4]]), 1500);
+    const t2 = setTimeout(() => setVis(v => [v[0], true, v[2], v[3], v[4]]), 3500);
+    const t3 = setTimeout(() => setVis(v => [v[0], v[1], true, v[3], v[4]]), 5500);
+    const t4 = setTimeout(() => setVis(v => [v[0], v[1], v[2], true, v[4]]), 7500);
+    const t5 = setTimeout(() => setVis(v => [v[0], v[1], v[2], v[3], true]), 10000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [active]);
 
   const reveal = (on: boolean) =>
@@ -304,11 +321,17 @@ function JokePhase({ active, onDone }: { active: boolean; onDone: () => void }) 
   return (
     <div className="fixed inset-0 bg-black flex flex-col items-center justify-center px-[8vw]">
       <div className="text-center max-w-[900px]">
-        <div className={`font-mono text-[clamp(30px,3.5vw,46px)] leading-[1.55] text-[var(--sub)] mb-5 ${reveal(vis[0])}`}>
-          nan mais je déconne.
+        <div className={`font-mono text-[clamp(24px,3vw,40px)] leading-[1.55] text-[var(--sub)] mb-4 ${reveal(vis[0])}`}>
+          bon.
         </div>
-        <div className={`font-mono text-[clamp(30px,3.5vw,46px)] leading-[1.55] text-[var(--txt)] font-semibold mb-10 ${reveal(vis[1])}`}>
-          en vrai si ça avait vraiment bugué là,<br />je faisais quoi ?
+        <div className={`font-mono text-[clamp(24px,3vw,40px)] leading-[1.55] text-[var(--sub)] mb-4 ${reveal(vis[1])}`}>
+          je me suis toujours imaginé ce moment.
+        </div>
+        <div className={`font-mono text-[clamp(24px,3vw,40px)] leading-[1.55] text-[var(--txt)] font-semibold mb-4 ${reveal(vis[2])}`}>
+          le pc qui lâche devant tout le monde.
+        </div>
+        <div className={`font-mono text-[clamp(24px,3vw,40px)] leading-[1.55] text-[var(--sub)] mb-10 ${reveal(vis[3])}`}>
+          fallait que je le fasse au moins une fois.
         </div>
         <button
           onClick={onDone}
@@ -321,7 +344,7 @@ function JokePhase({ active, onDone }: { active: boolean; onDone: () => void }) 
             hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.4)]
             hover:shadow-[0_8px_32px_rgba(212,255,0,0.06)]
             active:!scale-[0.97]
-            ${reveal(vis[2])}
+            ${reveal(vis[4])}
           `}
         >
           c'est parti les amis
@@ -355,7 +378,7 @@ export default function BootScreen({ onComplete }: { onComplete: () => void }) {
       {flash && <div className="fixed inset-0 z-[301] bg-white" />}
 
       <div className={`transition-opacity duration-[600ms] ${phase === 'prompt' ? '' : 'opacity-0 pointer-events-none'}`}>
-        <PromptPhase onDone={triggerBSOD} />
+        <PromptPhase onDone={triggerBSOD} onSkip={triggerBSOD} />
       </div>
 
       <div className={`transition-opacity duration-[600ms] ${phase === 'bsod' ? '' : 'opacity-0 pointer-events-none'}`}>
@@ -365,6 +388,7 @@ export default function BootScreen({ onComplete }: { onComplete: () => void }) {
       <div className={`transition-opacity duration-[600ms] ${phase === 'joke' ? '' : 'opacity-0 pointer-events-none'}`}>
         <JokePhase active={phase === 'joke'} onDone={triggerLaunch} />
       </div>
+
     </div>
   );
 }
