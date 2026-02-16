@@ -79,11 +79,47 @@ function Typewriter({ text, active, speed = 50 }: { text: string; active: boolea
 }
 
 /* ═══ SLIDE 0 — Intro ═══ */
+const HOLD_DURATION = 1500;
+const BTN_SIZE = 160;
+const CIRCLE_R = 68;
+const CIRCLE_C = 2 * Math.PI * CIRCLE_R;
+
 export function SlideIntro({ onStart }: { onStart: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const holdRef = useRef<number | null>(null);
+  const startRef = useRef(0);
+  const firedRef = useRef(false);
+
+  const tick = useCallback(() => {
+    const elapsed = Date.now() - startRef.current;
+    const p = Math.min(1, elapsed / HOLD_DURATION);
+    setProgress(p);
+    if (p >= 1 && !firedRef.current) {
+      firedRef.current = true;
+      onStart();
+      return;
+    }
+    holdRef.current = requestAnimationFrame(tick);
+  }, [onStart]);
+
+  const startHold = useCallback(() => {
+    firedRef.current = false;
+    startRef.current = Date.now();
+    holdRef.current = requestAnimationFrame(tick);
+  }, [tick]);
+
+  const stopHold = useCallback(() => {
+    if (holdRef.current) cancelAnimationFrame(holdRef.current);
+    holdRef.current = null;
+    if (!firedRef.current) setProgress(0);
+  }, []);
+
+  useEffect(() => () => { if (holdRef.current) cancelAnimationFrame(holdRef.current); }, []);
+
   return (
     <div className="flex flex-col items-center justify-center h-full text-center">
       <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent mb-4">
-        L'IA m'a rendu con.
+        L'IA m'a rendu bête.
       </div>
       <div className="font-ui text-[clamp(1.2rem,2.5vw,2rem)] font-normal leading-[1.3] tracking-tight text-[var(--sub)] mb-10">
         Et c'est le meilleur truc qui me soit arrivé.
@@ -91,21 +127,42 @@ export function SlideIntro({ onStart }: { onStart: () => void }) {
       <div className="font-mono text-sm text-white/30 mb-2">45 min · 20 sections · pas de filtre</div>
       <div className="font-mono text-xs text-white/20 mb-10">Mirco — Classe 2 — Neuchâtel</div>
       <button
-        onClick={onStart}
-        className="
-          inline-flex items-center gap-2.5 px-10 py-4 rounded-md
-          border border-[var(--accent-md)]
-          bg-gradient-to-b from-[rgba(212,255,0,0.06)] to-transparent
-          font-mono text-base font-bold tracking-[.1em] uppercase text-accent
-          cursor-pointer transition-all duration-150
-          hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.4)]
-          hover:shadow-[0_8px_32px_rgba(212,255,0,0.06)]
-          active:scale-[0.97]
-        "
+        onMouseDown={startHold}
+        onMouseUp={stopHold}
+        onMouseLeave={stopHold}
+        onTouchStart={startHold}
+        onTouchEnd={stopHold}
+        className="relative cursor-pointer select-none"
+        style={{ width: BTN_SIZE, height: BTN_SIZE }}
       >
-        <span className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_var(--accent-md)]" style={{ animation: 'pulse 1.5s ease infinite' }} />
-        Lancer
+        {/* pulse glow */}
+        <span
+          className="absolute inset-0 rounded-full bg-accent/10"
+          style={{ animation: 'pulse 2s ease-in-out infinite' }}
+        />
+        {/* outer ring */}
+        <span className="absolute inset-0 rounded-full border border-[var(--accent-md)]" />
+        {/* SVG progress arc */}
+        <svg className="absolute inset-0" width={BTN_SIZE} height={BTN_SIZE} style={{ transform: 'rotate(-90deg)' }}>
+          <circle
+            cx={BTN_SIZE / 2}
+            cy={BTN_SIZE / 2}
+            r={CIRCLE_R}
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth={3}
+            strokeDasharray={CIRCLE_C}
+            strokeDashoffset={CIRCLE_C * (1 - progress)}
+            strokeLinecap="round"
+            className="transition-none"
+          />
+        </svg>
+        {/* label */}
+        <span className="absolute inset-0 flex items-center justify-center font-mono text-lg font-bold tracking-[.1em] uppercase text-accent">
+          Lancer
+        </span>
       </button>
+      <div className="font-mono text-[10px] text-white/20 mt-4 tracking-wider">maintenir pour lancer</div>
     </div>
   );
 }
@@ -113,26 +170,31 @@ export function SlideIntro({ onStart }: { onStart: () => void }) {
 /* ═══ SLIDE 1 — Qui je suis ═══ */
 export function SlideWhoami() {
   return (
-    <Cg>
-      <Cmd>whoami</Cmd>
-      <Gap />
-      <H2 className="!text-white/90">Mirco — Classe 2 — Neuchâtel</H2>
-      <Gap />
-      <P>4 ans d'IA. Tous les jours. Sans exception.</P>
-      <div className="flex flex-wrap gap-1.5 my-4">
-        {['roman — 900 pages', 'album musique'].map(t => (
-          <span key={t} className="font-mono text-xs tracking-wider uppercase px-2.5 py-1 rounded-md border border-[rgba(212,255,0,0.15)] text-accent bg-[var(--accent-lo)]">{t}</span>
-        ))}
-        {['sites', 'vidéos', 'voix', 'stratégies'].map(t => (
-          <span key={t} className="font-mono text-xs tracking-wider uppercase px-2.5 py-1 rounded-md border border-[var(--border)] text-white/35">{t}</span>
-        ))}
+    <div className="grid grid-cols-12 gap-6 h-full p-5">
+      <div className="col-span-5 flex flex-col justify-start text-left">
+        <Cmd>whoami</Cmd>
+        <Gap />
+        <H2 className="!text-white/90">Mirco — Classe 2 — Neuchâtel</H2>
+        <Gap />
+        <P>4 ans d'IA. Tous les jours. Sans exception.</P>
+        <div className="flex flex-wrap gap-1.5 my-4">
+          {['roman — 900 pages', 'album musique'].map(t => (
+            <span key={t} className="font-mono text-xs tracking-wider uppercase px-2.5 py-1 rounded-md border border-[rgba(212,255,0,0.15)] text-accent bg-[var(--accent-lo)]">{t}</span>
+          ))}
+          {['sites', 'vidéos', 'voix', 'stratégies'].map(t => (
+            <span key={t} className="font-mono text-xs tracking-wider uppercase px-2.5 py-1 rounded-md border border-[var(--border)] text-white/35">{t}</span>
+          ))}
+        </div>
+        <Line />
+        <Gap />
+        <P><span className="text-white/35 italic">Pas un expert.</span> <W>Un utilisateur avancé.</W></P>
+        <Gap />
+        <P>Le titre c'est pas une blague.<br /><W>L'IA m'a rendu bête — et c'est le meilleur truc qui me soit arrivé.</W><br /><A>Les deux sont vrais.</A></P>
       </div>
-      <Line />
-      <Gap />
-      <P><span className="text-white/35 italic">Pas un expert.</span> <W>Un utilisateur avancé.</W></P>
-      <Gap />
-      <P>Le titre c'est pas une blague.<br /><W>L'IA m'a rendu con — et c'est le meilleur truc qui me soit arrivé.</W><br /><A>Les deux sont vrais.</A></P>
-    </Cg>
+      <div className="col-span-7 flex items-center justify-center -translate-y-[15%]">
+        <Video src="https://res.cloudinary.com/df5khdkxl/video/upload/v1771259927/moi_bj9r4r.mp4" />
+      </div>
+    </div>
   );
 }
 
@@ -148,7 +210,7 @@ export function SlideChapitre1({ active }: { active?: boolean }) {
       <div className="relative z-10">
         <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 1</div>
         <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
-          <Typewriter text="Ce que ça m'a donné" active={!!active} speed={55} />
+          <Typewriter text="Ce que ça m'a apporté" active={!!active} speed={55} />
         </div>
       </div>
     </div>
@@ -267,7 +329,7 @@ export function SlideSansEffort() {
   return (
     <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256317/8_qdndsw.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Le sans-effort</div>
-      <H1>C'est de la merde bien emballée.</H1>
+      <H1>C'est du vide bien emballé.</H1>
       <Gap />
       <P className="!text-accent !text-xl">Tout le monde peut faire. Personne vérifie.</P>
       <div className="mt-auto">
@@ -277,7 +339,7 @@ export function SlideSansEffort() {
           <N>→ Les tirets cadratins qui trahissent</N>
           <N>→ Le site fait en 5 minutes que le client prend pour du web design</N>
           <N>→ Le post de Marseille copié-collé sans relire</N>
-          <N>→ Faire c'est pas créer, sans effort = de la merde bien emballée</N>
+          <N>→ Faire c'est pas créer, sans effort = du vide bien emballé</N>
         </Notes>
       </div>
     </Cg>
@@ -299,7 +361,7 @@ export function SlideFlatterie() {
           <N>→ Elle me félicite, me donne raison, dit jamais que c'est nul</N>
           <N>→ Quand tu connais pas le domaine t'as aucun moyen de le voir</N>
           <N>→ Le pire c'est que ça fait du bien</N>
-          <N>→ Le lèche-cul le plus convaincant du monde</N>
+          <N>→ Le flatteur le plus convaincant du monde</N>
         </Notes>
       </div>
     </Cg>
@@ -443,15 +505,34 @@ export function SlideOutils() {
       <H1>Même outil. Résultat opposé.</H1>
       <Gap />
       <P className="!text-accent !text-xl">La différence entre 5 secondes et 6 mois, c'est toi.</P>
-      <div className="mt-auto">
-        <Line />
-        <Notes>
-          <N>→ Midjourney, Suno, ElevenLabs, Kling, n8n</N>
-          <N>→ Claude, ChatGPT, Gemini — mon classement perso</N>
-          <N>→ Les vrais prix du stack complet</N>
-          <N>→ Le même outil donne un résultat en 5 secondes ou en 6 mois</N>
-          <N>→ Le résultat en 5 secondes c'est de la merde. La qualité c'est toujours toi.</N>
-        </Notes>
+      <div className="mt-12">
+        <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-4">mon stack complet</div>
+        <table className="w-full font-mono text-xl border-collapse">
+          <tbody>
+            {[
+              ['Claude', 'LLM', '$100'],
+              ['ChatGPT', 'LLM', '$20'],
+              ['Gemini', 'LLM', '$20'],
+              ['Midjourney', 'Image', '$30'],
+              ['Suno', 'Musique', '$10'],
+              ['ElevenLabs', 'Voix', '$5'],
+              ['Kling', 'Vidéo', '$80'],
+              ['Magnific', 'Upscale', '$39'],
+              ['Adobe CC', 'Suite créative', 'CHF 60'],
+            ].map(([tool, cat, price]) => (
+              <tr key={tool} className="border-b border-white/5">
+                <td className="py-3 pr-4 text-white/90">{tool}</td>
+                <td className="py-3 pr-4 text-white/35">{cat}</td>
+                <td className="py-3 text-accent text-right">{price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="w-full h-px bg-[var(--border)] my-4" />
+        <div className="flex justify-between items-baseline font-mono">
+          <span className="text-white/50 text-xl font-bold uppercase tracking-wider">Total</span>
+          <span className="text-accent text-4xl font-bold">~CHF 360/mois</span>
+        </div>
       </div>
     </Cg>
   );
@@ -506,6 +587,7 @@ export function SlideSondage({ active }: { active?: boolean }) {
 }
 
 /* ═══ SLIDE 20 — La question finale ═══ */
+const COUNTDOWN_TOTAL = 15;
 const SCARY_MESSAGES = [
   'SUPPRESSION DES CAPACITÉS EN COURS...',
   'TU NE POURRAS PLUS CODER.',
@@ -515,13 +597,18 @@ const SCARY_MESSAGES = [
   'RETOUR À L\'IMPUISSANCE.',
   'TU REDEVIENS SEUL.',
   'PERSONNE NE T\'AIDERA.',
+  'TU OUBLIERAS CE QUE TU SAVAIS FAIRE.',
+  'TOUT CE QUE TU AS CONSTRUIT VA DISPARAÎTRE.',
+  'PLUS PERSONNE NE T\'ÉCOUTERA.',
+  'TU NE SERAS PLUS RIEN.',
   'SUPPRESSION DÉFINITIVE...',
   'ADIEU.',
+  '',
 ];
 
 export function SlideQuestionFinale() {
   const [mode, setMode] = useState<'ask' | 'alert' | 'dead'>('ask');
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(COUNTDOWN_TOTAL);
   const ctxRef = useRef<AudioContext | null>(null);
   const alarmRef = useRef<number | null>(null);
 
@@ -538,14 +625,14 @@ export function SlideQuestionFinale() {
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.type = 'square';
-      o.frequency.setValueAtTime(880, t);
-      o.frequency.setValueAtTime(660, t + 0.15);
-      g.gain.setValueAtTime(0.15, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      o.frequency.setValueAtTime(220, t);
+      o.frequency.setValueAtTime(160, t + 0.2);
+      g.gain.setValueAtTime(0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       o.connect(g);
       g.connect(ctx.destination);
       o.start(t);
-      o.stop(t + 0.35);
+      o.stop(t + 0.45);
     };
     beep();
     alarmRef.current = window.setInterval(beep, 800);
@@ -559,9 +646,9 @@ export function SlideQuestionFinale() {
   useEffect(() => {
     if (mode !== 'alert') return;
     startAlarm();
-    setCountdown(10);
+    setCountdown(COUNTDOWN_TOTAL);
 
-    let c = 10;
+    let c = COUNTDOWN_TOTAL;
     const timer = setInterval(() => {
       c--;
       if (c <= 0) {
@@ -594,8 +681,11 @@ export function SlideQuestionFinale() {
 
   if (mode === 'alert') {
     return createPortal(
-      <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-red-700 overflow-hidden">
-        <div className="absolute inset-0 bg-red-600 animate-pulse" />
+      <div
+        className="fixed inset-0 z-[999] flex flex-col items-center justify-center overflow-hidden transition-colors duration-[1500ms]"
+        style={{ background: `rgb(${Math.round(185 + (70 * (1 - countdown / COUNTDOWN_TOTAL)))}, ${Math.round(28 * (countdown / COUNTDOWN_TOTAL))}, ${Math.round(28 * (countdown / COUNTDOWN_TOTAL))})` }}
+      >
+        <div className="absolute inset-0 bg-red-600/30 animate-pulse" />
         <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
           <div className="font-mono text-[clamp(6rem,20vw,16rem)] font-black text-white leading-none">
             {countdown}
@@ -603,18 +693,27 @@ export function SlideQuestionFinale() {
           <div className="font-mono text-[clamp(1rem,2.5vw,2rem)] font-black text-white/90 uppercase tracking-[.15em] mt-6">
             ANNULER !
           </div>
-          <div className="font-mono text-[clamp(0.8rem,1.4vw,1.1rem)] text-white/70 uppercase tracking-[.2em] text-center max-w-[600px] mt-8 leading-relaxed min-h-[2em]">
-            {SCARY_MESSAGES[10 - countdown] ?? ''}
+          <div className="font-mono text-[clamp(1.5rem,3.5vw,3rem)] font-black text-white/90 uppercase tracking-[.1em] text-center w-full px-8 mt-8 leading-tight min-h-[2em]">
+            {SCARY_MESSAGES[COUNTDOWN_TOTAL - countdown] ?? ''}
           </div>
           <div className="font-mono text-xs text-white/40 uppercase tracking-[.3em] mt-4">
             destruction en cours...
           </div>
           <button
             onClick={() => { stopAlarm(); setMode('ask'); }}
-            className="mt-8 px-8 py-3 rounded border-2 border-white/80 font-mono text-base font-bold text-white uppercase tracking-widest cursor-pointer transition-all duration-150 hover:bg-white/20 active:scale-95"
+            className="mt-20 px-16 py-6 rounded-xl border-3 border-black font-mono text-[clamp(1.5rem,3vw,2.5rem)] font-black text-black bg-white uppercase tracking-[.15em] cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95"
+            style={{
+              animation: 'annuler-pulse 0.6s ease-in-out infinite alternate',
+            }}
           >
-            Annuler
+            ANNULER
           </button>
+          <style>{`
+            @keyframes annuler-pulse {
+              from { transform: scale(1); }
+              to { transform: scale(1.08); }
+            }
+          `}</style>
         </div>
       </div>,
       document.body,

@@ -15,7 +15,7 @@ function SplashPhase({ onStart }: { onStart: () => void }) {
     <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
       <div className="font-mono text-[clamp(1.5rem,4vw,3rem)] text-white/90 text-center leading-[1.4] mb-10 max-w-[800px] px-8">
         ce que je viens de vous montrer,<br />
-        <span className="text-accent font-semibold">c'était de la merde.</span>
+        <span className="text-accent font-semibold">c'était du vent.</span>
       </div>
       <button
         onClick={onStart}
