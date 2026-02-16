@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Video } from '@/components/ui';
 
 /** Shared typographic primitives */
@@ -83,41 +84,45 @@ function Typewriter({ text, active, speed = 50 }: { text: string; active: boolea
 /* ═══ SLIDE 0 — Intro ═══ */
 export function SlideIntro({ onStart }: { onStart: () => void }) {
   return (
-    <Sc>
-      <H1>L'IA m'a rendu con.</H1>
-      <H2>Et c'est le meilleur truc qui me soit arrivé.</H2>
-      <Line />
-      <P><W>45 minutes. 20 sections.</W><br />Chaque slide a un rappel de temps.<br />Pas de PowerPoint. Pas de filtre.</P>
-      <Gap />
-      <div className="font-mono text-sm text-white/35">Mirco — Classe 2 — Neuchâtel</div>
+    <div className="flex flex-col items-center justify-center h-full text-center">
+      <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent mb-4">
+        L'IA m'a rendu con.
+      </div>
+      <div className="font-ui text-[clamp(1.2rem,2.5vw,2rem)] font-normal leading-[1.3] tracking-tight text-[var(--sub)] mb-10">
+        Et c'est le meilleur truc qui me soit arrivé.
+      </div>
+      <div className="font-mono text-sm text-white/30 mb-2">45 min · 20 sections · pas de filtre</div>
+      <div className="font-mono text-xs text-white/20 mb-10">Mirco — Classe 2 — Neuchâtel</div>
       <button
         onClick={onStart}
         className="
-          inline-flex items-center gap-2 mt-5 px-8 py-3.5 rounded-md
+          inline-flex items-center gap-2.5 px-10 py-4 rounded-md
           border border-[var(--accent-md)]
-          bg-gradient-to-b from-[rgba(212,255,0,0.08)] to-transparent
-          font-mono text-xs font-bold tracking-widest uppercase text-accent
+          bg-gradient-to-b from-[rgba(212,255,0,0.06)] to-transparent
+          font-mono text-base font-bold tracking-[.1em] uppercase text-accent
           cursor-pointer transition-all duration-150
-          hover:bg-[rgba(212,255,0,0.12)] hover:border-[rgba(212,255,0,0.4)] hover:shadow-[0_8px_32px_rgba(212,255,0,0.08)]
-          active:scale-[0.98]
+          hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.4)]
+          hover:shadow-[0_8px_32px_rgba(212,255,0,0.06)]
+          active:scale-[0.97]
         "
       >
         <span className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_var(--accent-md)]" style={{ animation: 'pulse 1.5s ease infinite' }} />
         Lancer
       </button>
-    </Sc>
+    </div>
   );
 }
 
 /* ═══ SLIDE 1 — Qui je suis ═══ */
 export function SlideWhoami() {
   return (
-    <Sc>
+    <Cg>
       <Cmd>whoami</Cmd>
       <Gap />
       <H2 className="!text-white/90">Mirco — Classe 2 — Neuchâtel</H2>
+      <Gap />
       <P>4 ans d'IA. Tous les jours. Sans exception.</P>
-      <div className="flex flex-wrap gap-1.5 my-2.5">
+      <div className="flex flex-wrap gap-1.5 my-4">
         {['roman — 900 pages', 'album musique'].map(t => (
           <span key={t} className="font-mono text-xs tracking-wider uppercase px-2.5 py-1 rounded-md border border-[rgba(212,255,0,0.15)] text-accent bg-[var(--accent-lo)]">{t}</span>
         ))}
@@ -126,10 +131,11 @@ export function SlideWhoami() {
         ))}
       </div>
       <Line />
+      <Gap />
       <P><span className="text-white/35 italic">Pas un expert.</span> <W>Un utilisateur avancé.</W></P>
       <Gap />
       <P>Le titre c'est pas une blague.<br /><W>L'IA m'a rendu con — et c'est le meilleur truc qui me soit arrivé.</W><br /><A>Les deux sont vrais.</A></P>
-    </Sc>
+    </Cg>
   );
 }
 
@@ -505,22 +511,140 @@ export function SlideSondage() {
 }
 
 /* ═══ SLIDE 20 — La question finale ═══ */
+const SCARY_MESSAGES = [
+  'SUPPRESSION DES CAPACITÉS EN COURS...',
+  'TU NE POURRAS PLUS CODER.',
+  'TU NE POURRAS PLUS ÉCRIRE.',
+  'TU NE POURRAS PLUS PENSER À CETTE VITESSE.',
+  'RETOUR À LA NORMALE.',
+  'RETOUR À L\'IMPUISSANCE.',
+  'TU REDEVIENS SEUL.',
+  'PERSONNE NE T\'AIDERA.',
+  'SUPPRESSION DÉFINITIVE...',
+  'ADIEU.',
+];
+
 export function SlideQuestionFinale() {
+  const [mode, setMode] = useState<'ask' | 'alert' | 'dead'>('ask');
+  const [countdown, setCountdown] = useState(10);
+  const ctxRef = useRef<AudioContext | null>(null);
+  const alarmRef = useRef<number | null>(null);
+
+  const startAlarm = useCallback(() => {
+    try {
+      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      ctxRef.current = new AC();
+    } catch { return; }
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+
+    const beep = () => {
+      const t = ctx.currentTime;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'square';
+      o.frequency.setValueAtTime(880, t);
+      o.frequency.setValueAtTime(660, t + 0.15);
+      g.gain.setValueAtTime(0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.35);
+    };
+    beep();
+    alarmRef.current = window.setInterval(beep, 800);
+  }, []);
+
+  const stopAlarm = useCallback(() => {
+    if (alarmRef.current) { clearInterval(alarmRef.current); alarmRef.current = null; }
+    if (ctxRef.current) { ctxRef.current.close().catch(() => {}); ctxRef.current = null; }
+  }, []);
+
+  useEffect(() => {
+    if (mode !== 'alert') return;
+    startAlarm();
+    setCountdown(10);
+
+    let c = 10;
+    const timer = setInterval(() => {
+      c--;
+      if (c <= 0) {
+        clearInterval(timer);
+        stopAlarm();
+        setMode('dead');
+        setCountdown(0);
+      } else {
+        setCountdown(c);
+      }
+    }, 1000);
+
+    return () => { clearInterval(timer); stopAlarm(); };
+  }, [mode, startAlarm, stopAlarm]);
+
+  if (mode === 'dead') {
+    return createPortal(
+      <>
+        <div className="fixed inset-0 z-[999] bg-black" />
+        <button
+          onClick={() => setMode('ask')}
+          className="fixed bottom-4 right-5 z-[1000] font-mono text-[10px] text-white/10 cursor-pointer transition-colors duration-200 hover:text-white/30"
+        >
+          recommencer
+        </button>
+      </>,
+      document.body,
+    );
+  }
+
+  if (mode === 'alert') {
+    return createPortal(
+      <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-red-700 overflow-hidden">
+        <div className="absolute inset-0 bg-red-600 animate-pulse" />
+        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
+          <div className="font-mono text-[clamp(6rem,20vw,16rem)] font-black text-white leading-none">
+            {countdown}
+          </div>
+          <div className="font-mono text-[clamp(1rem,2.5vw,2rem)] font-black text-white/90 uppercase tracking-[.15em] mt-6">
+            ANNULER !
+          </div>
+          <div className="font-mono text-[clamp(0.8rem,1.4vw,1.1rem)] text-white/70 uppercase tracking-[.2em] text-center max-w-[600px] mt-8 leading-relaxed min-h-[2em]">
+            {SCARY_MESSAGES[10 - countdown] ?? ''}
+          </div>
+          <div className="font-mono text-xs text-white/40 uppercase tracking-[.3em] mt-4">
+            destruction en cours...
+          </div>
+          <button
+            onClick={() => { stopAlarm(); setMode('ask'); }}
+            className="mt-8 px-8 py-3 rounded border-2 border-white/80 font-mono text-base font-bold text-white uppercase tracking-widest cursor-pointer transition-all duration-150 hover:bg-white/20 active:scale-95"
+          >
+            Annuler
+          </button>
+        </div>
+      </div>,
+      document.body,
+    );
+  }
+
   return (
-    <Sc>
-      <Gap />
-      <H1 className="text-center">Est-ce que je détruirais l'IA ?</H1>
-      <Gap />
-      <div className="flex justify-center gap-6 my-6">
-        <div className="rounded-md border border-[rgba(212,255,0,0.3)] bg-[var(--accent-lo)] px-12 py-6 font-mono text-xl font-bold text-accent uppercase tracking-widest">
-          Oui
-        </div>
-        <div className="rounded-md border border-white/20 bg-[var(--surface)] px-12 py-6 font-mono text-xl font-bold text-white/60 uppercase tracking-widest">
-          Non
-        </div>
+    <div className="flex flex-col items-center justify-center h-full">
+      <div className="font-ui text-[clamp(2rem,5vw,4rem)] font-normal leading-[1.15] tracking-tight text-[var(--txt)] text-center mb-12">
+        Est-ce que je détruirais l'IA ?
       </div>
-      <Line />
-      <P className="text-center text-white/35 italic">Survoler. Hésiter. Maintenir.</P>
-    </Sc>
+      <div className="flex justify-center gap-6">
+        <button
+          onClick={() => setMode('alert')}
+          className="rounded-md border border-[rgba(212,255,0,0.3)] bg-[var(--accent-lo)] px-12 py-6 font-mono text-xl font-bold text-accent uppercase tracking-widest cursor-pointer transition-all duration-150 hover:bg-[rgba(212,255,0,0.15)] hover:border-accent active:scale-95"
+        >
+          Oui
+        </button>
+        <button
+          onClick={() => setMode('alert')}
+          className="rounded-md border border-white/20 bg-[var(--surface)] px-12 py-6 font-mono text-xl font-bold text-white/60 uppercase tracking-widest cursor-pointer transition-all duration-150 hover:bg-white/10 hover:border-white/40 active:scale-95"
+        >
+          Non
+        </button>
+      </div>
+    </div>
   );
 }
