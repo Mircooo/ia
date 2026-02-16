@@ -4,7 +4,6 @@ export const SECTIONS: Section[] = [
   // Prologue
   { title: 'Intro', layout: 'default', meta: 'en attente.' },
   { title: 'Qui je suis', layout: 'default', meta: 'ils ne savent pas encore où tu les emmènes.' },
-  { title: "C'est devenu normal", layout: 'default', meta: 'la routine. casse-la.' },
 
   // Chapitre 1
   { title: 'Ce que ça m\'a donné', layout: 'chapter', meta: '' },
@@ -14,7 +13,7 @@ export const SECTIONS: Section[] = [
   { title: 'La vitesse', layout: 'default', meta: 'respire.' },
 
   // Chapitre 2
-  { title: 'Ce que ça te fait', layout: 'chapter', meta: '' },
+  { title: 'L\'autre côté', layout: 'chapter', meta: '' },
   { title: 'Le sans-effort', layout: 'default', meta: 'tape là où ça fait mal.' },
   { title: 'La flatterie', layout: 'default', meta: 'le piège se referme.' },
   { title: 'Les fausses preuves', layout: 'default', meta: 'ça refroidit.' },
@@ -40,11 +39,11 @@ export interface NavGroup {
 }
 
 export const NAV_GROUPS: NavGroup[] = [
-  { label: 'Prologue', items: [0, 1, 2] },
-  { label: 'Ce que ça m\'a donné', items: [4, 5, 6, 7], chapterIndex: 3 },
-  { label: 'Ce que ça te fait', items: [9, 10, 11, 12], chapterIndex: 8 },
-  { label: 'Ce que ça change', items: [14, 15, 16, 17, 18], chapterIndex: 13 },
-  { label: 'Épilogue', items: [19, 20] },
+  { label: 'Prologue', items: [0, 1] },
+  { label: 'Ce que ça m\'a donné', items: [3, 4, 5, 6], chapterIndex: 2 },
+  { label: 'L\'autre côté', items: [8, 9, 10, 11], chapterIndex: 7 },
+  { label: 'Ce que ça change', items: [13, 14, 15, 16, 17], chapterIndex: 12 },
+  { label: 'Épilogue', items: [18, 19] },
 ];
 
 export const BOOT_LINES = [
@@ -54,7 +53,7 @@ export const BOOT_LINES = [
   { text: 'renderer              [OK]', cls: 'ok', delay: 80 },
   { text: 'audio                 [OK]', cls: 'ok', delay: 60 },
   { text: 'modules               [OK]', cls: 'ok', delay: 90 },
-  { text: '21 sections × ~2:00   [OK]', cls: 'ok', delay: 70 },
+  { text: '20 sections × ~2:15   [OK]', cls: 'ok', delay: 70 },
   { text: '', cls: '', delay: 25 },
   { text: '⚠ sycophancy_filter = off', cls: 'warn', delay: 120 },
   { text: '⚠ bullshit_tolerance = 0', cls: 'warn', delay: 90 },

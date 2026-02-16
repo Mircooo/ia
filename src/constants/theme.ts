@@ -19,7 +19,7 @@ export const Z_LAYERS = {
 
 export const TIMER = {
   TOTAL_MS: 45 * 60 * 1000,
-  SECTIONS: 21,
+  SECTIONS: 20,
   CHAPTER_DURATION_MS: 15_000,
-  CHAPTER_INDICES: [3, 8, 13] as readonly number[],
+  CHAPTER_INDICES: [2, 7, 12] as readonly number[],
 } as const;

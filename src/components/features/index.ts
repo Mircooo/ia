@@ -3,7 +3,6 @@ export { default as Slide } from './Slide';
 export {
   SlideIntro,
   SlideWhoami,
-  SlideNormal,
   SlideChapitre1,
   SlideExpression,
   SlideDemocratisation,
