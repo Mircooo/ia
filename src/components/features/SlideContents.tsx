@@ -34,13 +34,13 @@ const N = ({ children }: { children: React.ReactNode }) => (
   <div className="text-white/25 transition-colors duration-200 hover:text-accent cursor-default">{children}</div>
 );
 
-/** Content grid: 7 cols text + 5 cols video */
+/** Content grid: 5 cols text + 7 cols video */
 const Cg = ({ children, video }: { children: React.ReactNode; video?: string }) => (
   <div className="grid grid-cols-12 gap-6 h-full p-5">
-    <div className="col-span-7 flex flex-col justify-start text-left">
+    <div className="col-span-5 flex flex-col justify-start text-left">
       {children}
     </div>
-    <div className="col-span-5 flex items-center justify-center">
+    <div className="col-span-7 flex items-center justify-center">
       {video ? (
         <Video src={video} />
       ) : (
@@ -136,10 +136,17 @@ export function SlideWhoami() {
 /* ═══ SLIDE 2 — Chapitre 1 ═══ */
 export function SlideChapitre1({ active }: { active?: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center">
-      <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 1</div>
-      <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
-        <Typewriter text="Ce que ça m'a donné" active={!!active} speed={55} />
+    <div className="relative flex flex-col items-center justify-center h-full text-center overflow-hidden">
+      <video
+        src="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256722/army_sqleow.mp4"
+        muted loop autoPlay playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="relative z-10">
+        <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 1</div>
+        <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
+          <Typewriter text="Ce que ça m'a donné" active={!!active} speed={55} />
+        </div>
       </div>
     </div>
   );
@@ -148,7 +155,7 @@ export function SlideChapitre1({ active }: { active?: boolean }) {
 /* ═══ SLIDE 4 — L'expression ═══ */
 export function SlideExpression() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256317/7_orn5j4.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'expression</div>
       <H1>J'ai jamais lu un livre.<br />J'en ai écrit un.</H1>
       <Gap />
@@ -170,7 +177,7 @@ export function SlideExpression() {
 /* ═══ SLIDE 5 — La démocratisation ═══ */
 export function SlideDemocratisation() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256327/9_hflksw.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La démocratisation</div>
       <H1>Le pouvoir change de mains.</H1>
       <Gap />
@@ -192,7 +199,7 @@ export function SlideDemocratisation() {
 /* ═══ SLIDE 6 — Les compétences ═══ */
 export function SlideCompetences() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256331/4_h6qfcr.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les compétences</div>
       <H1>Je suis codeur. Enfin… presque.</H1>
       <Gap />
@@ -214,7 +221,7 @@ export function SlideCompetences() {
 /* ═══ SLIDE 7 — La vitesse ═══ */
 export function SlideVitesse() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256325/6_uegxtp.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La vitesse</div>
       <H1>Mon cerveau a pété les plombs.</H1>
       <Gap />
@@ -236,10 +243,17 @@ export function SlideVitesse() {
 /* ═══ SLIDE 8 — Chapitre 2 ═══ */
 export function SlideChapitre2({ active }: { active?: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center">
-      <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 2</div>
-      <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
-        <Typewriter text="L'autre côté" active={!!active} speed={55} />
+    <div className="relative flex flex-col items-center justify-center h-full text-center overflow-hidden">
+      <video
+        src="https://res.cloudinary.com/df5khdkxl/video/upload/v1771255721/merde_z3xtum.mp4"
+        muted loop autoPlay playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="relative z-10">
+        <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 2</div>
+        <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
+          <Typewriter text="L'autre côté" active={!!active} speed={55} />
+        </div>
       </div>
     </div>
   );
@@ -248,7 +262,7 @@ export function SlideChapitre2({ active }: { active?: boolean }) {
 /* ═══ SLIDE 9 — Le sans-effort ═══ */
 export function SlideSansEffort() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256317/8_qdndsw.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Le sans-effort</div>
       <H1>C'est de la merde bien emballée.</H1>
       <Gap />
@@ -270,7 +284,7 @@ export function SlideSansEffort() {
 /* ═══ SLIDE 10 — La flatterie ═══ */
 export function SlideFlatterie() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256325/3_wh0ixp.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La flatterie</div>
       <H1>T'es incroyable.<br />Signé : un algorithme.</H1>
       <Gap />
@@ -292,7 +306,7 @@ export function SlideFlatterie() {
 /* ═══ SLIDE 11 — Les fausses preuves ═══ */
 export function SlideFaussesPreuves() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256318/5_kysngv.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les fausses preuves</div>
       <H1>Il m'a trouvé des preuves.<br />Elles existaient pas.</H1>
       <Gap />
@@ -314,7 +328,7 @@ export function SlideFaussesPreuves() {
 /* ═══ SLIDE 12 — La dépendance ═══ */
 export function SlideDependance() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256329/2_ktknfz.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La dépendance</div>
       <H1>Fais-moi confiance.</H1>
       <Gap />
@@ -336,10 +350,17 @@ export function SlideDependance() {
 /* ═══ SLIDE 13 — Chapitre 3 ═══ */
 export function SlideChapitre3({ active }: { active?: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center">
-      <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 3</div>
-      <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
-        <Typewriter text="Ce que ça change" active={!!active} speed={55} />
+    <div className="relative flex flex-col items-center justify-center h-full text-center overflow-hidden">
+      <video
+        src="https://res.cloudinary.com/df5khdkxl/video/upload/v1771255728/futur_cznq3y.mp4"
+        muted loop autoPlay playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="relative z-10">
+        <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">chapitre 3</div>
+        <div className="font-ui text-[clamp(3rem,7vw,6rem)] font-normal leading-[1.05] tracking-tight text-accent">
+          <Typewriter text="Ce que ça change" active={!!active} speed={55} />
+        </div>
       </div>
     </div>
   );
@@ -348,7 +369,7 @@ export function SlideChapitre3({ active }: { active?: boolean }) {
 /* ═══ SLIDE 14 — L'automatisation ═══ */
 export function SlideAutomatisation() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256325/10_ax3gk6.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'automatisation</div>
       <H1>Je suis allé me faire un café.</H1>
       <Gap />
@@ -370,7 +391,7 @@ export function SlideAutomatisation() {
 /* ═══ SLIDE 15 — La limite ═══ */
 export function SlideLimite() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256317/1_lctvsn.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La limite</div>
       <H1>Je pourrais automatiser toute ma boîte.</H1>
       <Gap />
@@ -392,7 +413,7 @@ export function SlideLimite() {
 /* ═══ SLIDE 16 — L'expérience ═══ */
 export function SlideExperience() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256987/12_qkiwiw.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'expérience</div>
       <H1>Hier c'était le meilleur.<br />Aujourd'hui c'est déjà mort.</H1>
       <Gap />
@@ -414,7 +435,7 @@ export function SlideExperience() {
 /* ═══ SLIDE 17 — Les outils ═══ */
 export function SlideOutils() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771256986/11_qa1vyk.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les outils</div>
       <H1>Même outil. Résultat opposé.</H1>
       <Gap />
@@ -436,7 +457,7 @@ export function SlideOutils() {
 /* ═══ SLIDE 18 — La solitude ═══ */
 export function SlideSolitude() {
   return (
-    <Cg>
+    <Cg video="https://res.cloudinary.com/df5khdkxl/video/upload/v1771257082/15_zlw8rw.mp4">
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La solitude</div>
       <H1>Tu vois le monde différemment.<br />Et tu peux rien dire.</H1>
       <Gap />
