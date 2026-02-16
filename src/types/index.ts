@@ -1,6 +1,6 @@
 export interface Section {
   title: string;
-  layout: 'default' | 'split' | 'grid';
+  layout: 'default' | 'split' | 'grid' | 'chapter';
   meta: string;
 }
 

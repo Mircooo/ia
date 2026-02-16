@@ -1,1 +1,2 @@
-export { SECTIONS, BOOT_LINES } from './sections';
+export { SECTIONS, NAV_GROUPS, BOOT_LINES } from './sections';
+export type { NavGroup } from './sections';

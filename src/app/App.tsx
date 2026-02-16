@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type ComponentType } from 'react';
 import { SECTIONS } from '@/data';
 import { useTimer, useKeyboard } from '@/hooks';
 import { initAudio, tick, hasAudio } from '@/utils';
@@ -6,22 +6,34 @@ import { Background } from '@/components/ui';
 import { Header, Stepper, TimerBar, NavPanel, BottomBar, Stage } from '@/components/layout';
 import {
   BootScreen, Slide,
-  SlideIntro, SlideCoupure, SlideWhoami, SlideNormal,
-  SlideMerde, SlidePervers, SlideOutils, SlideFantasme,
-  SlideCon, SlidePourtant,
+  SlideIntro, SlideWhoami,
+  SlideChapitre1, SlideExpression, SlideDemocratisation, SlideCompetences, SlideVitesse,
+  SlideChapitre2, SlideSansEffort, SlideFlatterie, SlideFaussesPreuves, SlideDependance,
+  SlideChapitre3, SlideAutomatisation, SlideLimite, SlideExperience, SlideOutils, SlideSolitude,
+  SlideSondage, SlideQuestionFinale,
 } from '@/components/features';
 
-const SLIDE_COMPONENTS = [
+const SLIDE_COMPONENTS: (ComponentType<{ active?: boolean }> | null)[] = [
   null, // Intro handled separately
-  SlideCoupure,
   SlideWhoami,
-  SlideNormal,
-  SlideMerde,
-  SlidePervers,
+  SlideChapitre1,
+  SlideExpression,
+  SlideDemocratisation,
+  SlideCompetences,
+  SlideVitesse,
+  SlideChapitre2,
+  SlideSansEffort,
+  SlideFlatterie,
+  SlideFaussesPreuves,
+  SlideDependance,
+  SlideChapitre3,
+  SlideAutomatisation,
+  SlideLimite,
+  SlideExperience,
   SlideOutils,
-  SlideFantasme,
-  SlideCon,
-  SlidePourtant,
+  SlideSolitude,
+  SlideSondage,
+  SlideQuestionFinale,
 ];
 
 export default function App() {
@@ -86,12 +98,12 @@ export default function App() {
               <SlideIntro onStart={handleStart} />
             </Slide>
 
-            {/* Slides 1-9 */}
+            {/* Slides 1-19 */}
             {SLIDE_COMPONENTS.map((Comp, i) => {
               if (i === 0 || !Comp) return null;
               return (
                 <Slide key={i} active={current === i}>
-                  <Comp />
+                  <Comp active={current === i} />
                 </Slide>
               );
             })}
