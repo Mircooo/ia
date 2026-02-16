@@ -78,13 +78,13 @@ import { COLORS } from '../../constants/theme';
 ```
 
 **Aliases disponibles :**
-- `@` → src/
-- `@components` → src/components/
-- `@hooks` → src/hooks/
-- `@constants` → src/constants/
-- `@utils` → src/utils/
-- `@data` → src/data/
-- `@styles` → src/styles/
+ - `\@` → src/
+ - `\@components` → src/components/
+ - `\@hooks` → src/hooks/
+ - `\@constants` → src/constants/
+ - `\@utils` → src/utils/
+ - `\@data` → src/data/
+ - `\@styles` → src/styles/
 
 ---
 
@@ -99,7 +99,7 @@ import { COLORS } from '../../constants/theme';
 | Renommer des fichiers existants | Casse les imports partout |
 | "Améliorer" du code qui marche | Si c'est pas cassé, touche pas |
 | Ajouter des console.log | Dev only, jamais en prod |
-| Hardcoder des valeurs | Utilise @constants |
+| Hardcoder des valeurs | Utilise \@constants |
 | Inventer des features | Tu n'es pas le product owner |
 
 ---
@@ -109,7 +109,7 @@ import { COLORS } from '../../constants/theme';
 | Action | Comment |
 |--------|---------|
 | Vérifier que ça build | `pnpm build` après chaque modif |
-| Utiliser TypeScript correctement | Pas de `any`, pas de `@ts-ignore` |
+| Utiliser TypeScript correctement | Pas de `any`, pas de `\@ts-ignore` |
 | Respecter le style existant | Copie le pattern des fichiers voisins |
 | Mettre à jour les barrel exports | Si tu crées un composant, ajoute-le à index.ts |
 | Garder le scope minimal | 1 demande = 1 modif chirurgicale |
@@ -166,8 +166,8 @@ import { COLORS } from '../../constants/theme';
 [ ] J'ai UNIQUEMENT modifié ce qui était demandé
 [ ] Je n'ai RIEN inventé ni "amélioré"
 [ ] pnpm build passe sans erreur
-[ ] Pas de any ni @ts-ignore
-[ ] Imports via aliases (@components, @hooks...)
+[ ] Pas de any ni \@ts-ignore
+[ ] Imports via aliases (@components, \@hooks...)
 [ ] Barrel exports mis à jour si nouveau fichier
 [ ] Pas de console.log
 [ ] Pas de valeurs hardcodées

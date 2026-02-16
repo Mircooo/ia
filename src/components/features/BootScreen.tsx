@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 /* ═══ PROMPT TEXT SEGMENTS ═══ */
 interface Segment { t: string; cls?: string; pause?: number; speed?: number }
@@ -226,7 +226,7 @@ function PromptPhase({ onDone, onSkip }: { onDone: () => void; onSkip: () => voi
 }
 
 /* ═══ PHASE 2 — BSOD ═══ */
-function BSODPhase({ active, onDone }: { active: boolean; onDone: () => void }) {
+function BSODPhase({ active, onDone, onSkip }: { active: boolean; onDone: () => void; onSkip: () => void }) {
   const [pct, setPct] = useState(0);
   const [line, setLine] = useState<string | null>(null);
   const [showBtn, setShowBtn] = useState(false);
@@ -297,6 +297,13 @@ function BSODPhase({ active, onDone }: { active: boolean; onDone: () => void }) 
           Restart
         </button>
       )}
+      <button
+        onClick={onSkip}
+        className="fixed bottom-5 right-6 z-20 text-white/20 text-xs cursor-pointer transition-colors duration-150 hover:text-white/50"
+        style={{ fontFamily: "'Segoe UI','Helvetica Neue',Arial,sans-serif" }}
+      >
+        skip
+      </button>
     </div>
   );
 }
@@ -382,7 +389,7 @@ export default function BootScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className={`transition-opacity duration-[600ms] ${phase === 'bsod' ? '' : 'opacity-0 pointer-events-none'}`}>
-        <BSODPhase active={phase === 'bsod'} onDone={triggerJoke} />
+        <BSODPhase active={phase === 'bsod'} onDone={triggerJoke} onSkip={triggerLaunch} />
       </div>
 
       <div className={`transition-opacity duration-[600ms] ${phase === 'joke' ? '' : 'opacity-0 pointer-events-none'}`}>

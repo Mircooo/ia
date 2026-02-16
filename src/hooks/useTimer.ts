@@ -14,6 +14,20 @@ interface UseTimerReturn {
   sectionStatus: { text: string; color: string };
 }
 
+const CONTENT_DURATION_MS =
+  (TIMER.TOTAL_MS - TIMER.CHAPTER_INDICES.length * TIMER.CHAPTER_DURATION_MS) /
+  (TIMER.SECTIONS - TIMER.CHAPTER_INDICES.length);
+
+function getIdealTime(section: number): number {
+  let time = 0;
+  for (let i = 0; i < section; i++) {
+    time += (TIMER.CHAPTER_INDICES as readonly number[]).includes(i)
+      ? TIMER.CHAPTER_DURATION_MS
+      : CONTENT_DURATION_MS;
+  }
+  return time;
+}
+
 export function useTimer(currentSection: number): UseTimerReturn {
   const [elapsed, setElapsed] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -72,8 +86,8 @@ export function useTimer(currentSection: number): UseTimerReturn {
   const s = Math.floor((remaining % 60000) / 1000);
   const formatted = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 
-  // Section timing
-  const ideal = currentSection * TIMER.PER_SECTION_MS;
+  // Section timing (weighted: chapters ~15s, content ~2:30)
+  const ideal = getIdealTime(currentSection);
   const diff = elapsed - ideal;
   const abs = Math.abs(Math.round(diff / 1000));
   const mm = Math.floor(abs / 60);
@@ -82,7 +96,7 @@ export function useTimer(currentSection: number): UseTimerReturn {
 
   let sectionStatus: { text: string; color: string };
   if (!running) {
-    sectionStatus = { text: '~4:30 / section', color: 'var(--dim)' };
+    sectionStatus = { text: '~2:00 / section', color: 'var(--dim)' };
   } else if (diff > 30000) {
     sectionStatus = { text: `▸ +${str}`, color: 'var(--txt)' };
   } else if (diff < -30000) {
