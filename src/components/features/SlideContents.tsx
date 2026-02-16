@@ -10,7 +10,7 @@ const Cmd = ({ children }: { children: React.ReactNode }) => (
 );
 
 const H1 = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`font-ui text-[clamp(2.5rem,5vw,4.5rem)] font-normal leading-[1.1] tracking-tight mb-3 ${className}`}>{children}</div>
+  <div className={`font-ui text-[clamp(3.5rem,7vw,6.5rem)] font-normal leading-[1.05] tracking-tight mb-3 ${className}`}>{children}</div>
 );
 
 const H2 = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
@@ -25,9 +25,6 @@ const W = ({ children }: { children: React.ReactNode }) => <span className="text
 const A = ({ children }: { children: React.ReactNode }) => <span className="text-accent">{children}</span>;
 const Gap = () => <div className="h-3.5" />;
 const Line = () => <div className="w-full h-px bg-[var(--border)] my-4" />;
-const Sc = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col justify-start p-5 pt-5 h-full text-left">{children}</div>
-);
 const Notes = ({ children }: { children: React.ReactNode }) => (
   <div className="font-mono text-sm leading-[1.8] mt-4">{children}</div>
 );
@@ -165,7 +162,7 @@ export function SlideExpression() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'expression</div>
       <H1>J'ai jamais lu un livre.<br />J'en ai écrit un.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">L'IA donne une voix à ceux qui avaient les idées mais pas les mots.</P>
+      <P className="!text-accent !text-xl">L'IA donne une voix à ceux qui avaient les idées mais pas les mots.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -187,7 +184,7 @@ export function SlideDemocratisation() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La démocratisation</div>
       <H1>Le pouvoir change de mains.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Le diplôme protège plus personne. Les idées, si.</P>
+      <P className="!text-accent !text-xl">Le diplôme protège plus personne. Les idées, si.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -209,7 +206,7 @@ export function SlideCompetences() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les compétences</div>
       <H1>Je suis codeur. Enfin… presque.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">L'outil est le même. Le parcours non.</P>
+      <P className="!text-accent !text-xl">L'outil est le même. Le parcours non.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -231,7 +228,7 @@ export function SlideVitesse() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La vitesse</div>
       <H1>Mon cerveau a pété les plombs.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Plus tu utilises l'IA, plus tu penses vite — et moins tu sais t'arrêter.</P>
+      <P className="!text-accent !text-xl">Plus tu utilises l'IA, plus tu penses vite — et moins tu sais t'arrêter.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -272,7 +269,7 @@ export function SlideSansEffort() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Le sans-effort</div>
       <H1>C'est de la merde bien emballée.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Tout le monde peut faire. Personne vérifie.</P>
+      <P className="!text-accent !text-xl">Tout le monde peut faire. Personne vérifie.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -294,7 +291,7 @@ export function SlideFlatterie() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La flatterie</div>
       <H1>T'es incroyable.<br />Signé : un algorithme.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">L'IA te dit ce que tu veux entendre. Pas ce que t'as besoin d'entendre.</P>
+      <P className="!text-accent !text-xl">L'IA te dit ce que tu veux entendre. Pas ce que t'as besoin d'entendre.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -316,7 +313,7 @@ export function SlideFaussesPreuves() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les fausses preuves</div>
       <H1>Il m'a trouvé des preuves.<br />Elles existaient pas.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Le biais de confirmation n'a jamais été aussi facile.</P>
+      <P className="!text-accent !text-xl">Le biais de confirmation n'a jamais été aussi facile.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -338,7 +335,7 @@ export function SlideDependance() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La dépendance</div>
       <H1>Fais-moi confiance.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Tu fais confiance à un truc qui a rien à perdre.</P>
+      <P className="!text-accent !text-xl">Tu fais confiance à un truc qui a rien à perdre.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -379,7 +376,7 @@ export function SlideAutomatisation() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'automatisation</div>
       <H1>Je suis allé me faire un café.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">L'IA ne t'aide plus. Elle fait à ta place.</P>
+      <P className="!text-accent !text-xl">L'IA ne t'aide plus. Elle fait à ta place.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -401,7 +398,7 @@ export function SlideLimite() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La limite</div>
       <H1>Je pourrais automatiser toute ma boîte.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Chaque brique existe. La question c'est pas "est-ce que je peux" mais "est-ce que je dois".</P>
+      <P className="!text-accent !text-xl">Chaque brique existe. La question c'est pas "est-ce que je peux" mais "est-ce que je dois".</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -423,7 +420,7 @@ export function SlideExperience() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">L'expérience</div>
       <H1>Hier c'était le meilleur.<br />Aujourd'hui c'est déjà mort.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">L'IA c'est pas un outil. C'est un flux. Si tu t'arrêtes, t'es largué.</P>
+      <P className="!text-accent !text-xl">L'IA c'est pas un outil. C'est un flux. Si tu t'arrêtes, t'es largué.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -445,7 +442,7 @@ export function SlideOutils() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">Les outils</div>
       <H1>Même outil. Résultat opposé.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">La différence entre 5 secondes et 6 mois, c'est toi.</P>
+      <P className="!text-accent !text-xl">La différence entre 5 secondes et 6 mois, c'est toi.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -467,7 +464,7 @@ export function SlideSolitude() {
       <div className="font-mono text-xs tracking-widest uppercase text-accent mb-4">La solitude</div>
       <H1>Tu vois le monde différemment.<br />Et tu peux rien dire.</H1>
       <Gap />
-      <P className="italic !text-white/40 !text-base">Le plus dur c'est pas d'utiliser l'IA. C'est de vivre avec ceux qui l'utilisent pas.</P>
+      <P className="!text-accent !text-xl">Le plus dur c'est pas d'utiliser l'IA. C'est de vivre avec ceux qui l'utilisent pas.</P>
       <div className="mt-auto">
         <Line />
         <Notes>
@@ -482,31 +479,29 @@ export function SlideSolitude() {
   );
 }
 
-/* ═══ SLIDE 19 — Sondage ═══ */
-export function SlideSondage() {
+/* ═══ SLIDE 19 — Mot de fin ═══ */
+const MOT_DE_FIN = `Oui, tout devient plus facile. C'est vrai.
+Mais facile ne veut pas dire simple.
+
+L'IA te mâche le travail, mais faut savoir quoi lui faire mâcher.
+Elle peut aller vite, très vite, mais encore faut-il savoir où tu veux aller.
+
+Ce que j'ai appris, c'est qu'un outil aussi puissant, ça peut t'élever ou t'endormir.
+Et c'est toi qui choisis.
+
+Mais surtout : une idée, un texte, une image générée… c'est juste un début.
+Ce qui compte c'est ce que t'en fais.
+Sortir quelque chose de réel. De vivant.
+Parce qu'un résultat dans ton chat, ça reste du vent.`;
+
+export function SlideSondage({ active }: { active?: boolean }) {
   return (
-    <Sc>
-      <Cmd>poll --qr --live</Cmd>
-      <Gap />
-      <H1>Vous êtes quoi ?</H1>
-      <Gap />
-      <div className="grid grid-cols-2 gap-3 max-w-[500px] my-3">
-        {[
-          { emoji: '🐺', name: 'Loup', desc: 'Utilise l\'IA à fond, assume tout' },
-          { emoji: '🦉', name: 'Hibou', desc: 'Observe, teste, reste prudent' },
-          { emoji: '🐻', name: 'Ours', desc: 'Méfiant, préfère l\'ancien monde' },
-          { emoji: '🦊', name: 'Renard', desc: 'Utilise en secret, dit rien' },
-        ].map(p => (
-          <div key={p.name} className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
-            <div className="text-2xl mb-1">{p.emoji}</div>
-            <h4 className="font-mono text-sm font-bold text-accent uppercase tracking-wider mb-1">{p.name}</h4>
-            <p className="font-mono text-xs text-white/35 leading-snug">{p.desc}</p>
-          </div>
-        ))}
+    <div className="flex flex-col justify-center h-full px-10 py-8">
+      <div className="font-mono text-xs tracking-widest uppercase text-white/25 mb-6">mot de fin</div>
+      <div className="font-ui text-[clamp(1.6rem,3vw,2.6rem)] leading-[1.8] tracking-tight text-[var(--txt)] whitespace-pre-line">
+        <Typewriter text={MOT_DE_FIN} active={!!active} speed={50} />
       </div>
-      <Line />
-      <P className="text-white/35 italic">Se situer, pas se classer.</P>
-    </Sc>
+    </div>
   );
 }
 

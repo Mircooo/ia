@@ -28,7 +28,7 @@ export const SECTIONS: Section[] = [
   { title: 'La solitude', layout: 'default', meta: 'laisse le silence.' },
 
   // Épilogue
-  { title: 'Sondage', layout: 'default', meta: 'ils se découvrent.' },
+  { title: 'Mot de fin', layout: 'default', meta: 'laisse résonner.' },
   { title: 'La question finale', layout: 'default', meta: 'fin de transmission.' },
 ];
 
